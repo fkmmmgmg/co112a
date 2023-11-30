@@ -40,4 +40,38 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+
+    Or16(a=false,b=instruction,out[15]=isC,out[12]=a,out[11]=c1,out[10]=c2,out[9]=c3,out[8]=c4,out[7]=c5,out[6]=c6,out[5]=d1,out[4]=d2,out[3]=d3,out[2]=j1, out[1]=j2,out[0]=j3); //ixxaccccccddjjj
+
+    Not(in=isC, out=isA);            
+    And(a=isC, b=d1, out=AluToA);     
+    Or(a=isA, b=AluToA, out=Aload);
+    Mux16(a=instruction, b=ALUout, sel=isC, out=Ain);
+
+    ARegister(in=Ain, load=Aload, out=Aout, out[0..14]=addressM);   // Aload = isA 或(isC & d1),  addressM=Aout[0..14]接收一個 16 位的輸入 Ain，並具有一個控制信號 Aload 來指示是否要載入數據。如果 Aload 為真，則註冊器將載入 Ain 的值，並將其輸出到 Aout。同時，Aout[0..14] 部分也被輸出到 addressM
+    
+    // D register
+
+    And(a=isC, b=d2, out=Dload);
+    DRegister(in=ALUout, load=Dload, out=Dout);  // Dload = isC & d2 接收一個 16 位的輸入 ALUout，並具有一個控制信號 Dload 來指示是否要載入數據。如果 Dload 為真，則Register將載入 ALUout 的值，並將其輸出到 Dout
+    
+    // ALU
+
+    Mux16(a=Aout, b=inM, sel=a, out=AorM);
+    ALU(x=Dout, y=AorM, zx=c1, nx=c2, zy=c3, ny=c4, f=c5, no=c6, out=ALUout, out=outM, zr=zr, ng=ng);
+
+    // JUMP condition
+
+    Or(a=ng, b=zr, out=ngzr);            // ngzr = (ng 或 zr)
+    Not(in=ngzr, out=gt);                // g = out > 0 = !(ng 或 zr);  ng = (out < 0);  zr = (out = 0)
+    And(a=ng, b=j1, out=passLT);         // passLT = (ng & LT)
+    And(a=zr, b=j2, out=passEQ);         // passEQ = (zr & EQ)
+    And(a=gt, b=j3, out=passGT);         // passGT = (gt & GT)
+    Or(a=passLT, b=passEQ, out=passLE);
+    Or(a=passLE, b=passGT, out=pass);
+    And(a=isC, b=pass, out=PCload);      // PCload = isC & pass 將 JLT、JEQ、JGT 條件合併為一個總體條件 pass。
+    PC(in=Aout, load=PCload, inc=true, reset=reset, out[0..14]=pc); // PCload = isC & ((ng&j1)或 (zr&j2)或(!ng&!zr&j3)) 接收 Aout 作為輸入，並根據 PCload 控制信號進行載入。inc 控制是否自增，reset 控制是否重置，pc 是 PC 的輸出
+
+    // output
+    And(a=isC, b=d3, out=writeM);         // writeM = isC & d3
 }

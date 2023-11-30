@@ -12,3 +12,76 @@
 // the screen should remain fully clear as long as no key is pressed.
 
 // Put your code here.
+
+//forever
+//   arr = SCREEN
+//   n = 8192
+//   i = 0
+//   while (i < n) {
+//     if (*KBD != 0)//"KBD" 表示鍵盤指令，即通過按下鍵盤上的特定按鍵來執行某些操作或觸發特定的功能
+//       arr[i] = -1//由-1填滿
+//     else
+//       arr[i] = 0
+//     i = i + 1
+//   }
+// goto forever;
+
+(FOREVER)
+// arr = SCREEN
+ @SCREEN
+  D=A   //將 SCREEN 的地址載入 D 寄存器 D=SCREEN
+ @arr
+  M=D  //將 D 的值存儲到 arr 變數中 arr = SCREEN
+
+// n=8192
+ @8192
+  D=A  //將常數 8192 載入 D 寄存器 D=8192
+ @n
+  M=D //n=8192
+// i = 0
+  @i
+   M=0
+(LOOP)
+// if (i==n) goto ENDLOOP
+  @i
+   D=M
+  @n
+   D=D-M
+  @ENDLOOP
+   D; JEQ
+	
+// if (*KBD != 0)
+  @KBD
+   D=M     // D = *KBD
+  @ELSE
+   D; JEQ  // if (*KDB==0) goto ELSE
+	
+//   RAM[arr+i] = -1
+  @arr
+   D=M
+  @i
+   A=D+M
+   M=-1
+  @ENDIF
+   0; JMP
+(ELSE)	
+// else 
+//   RAM[arr+i] = 0
+  @arr
+   D=M
+  @i
+   A=D+M
+   M=0
+	
+(ENDIF)
+	
+// i++
+  @i
+   M=M+1
+	
+  @LOOP
+   0; JMP
+
+(ENDLOOP)
+  @FOREVER
+   0; JMP
