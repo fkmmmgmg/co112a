@@ -10,6 +10,6 @@
 課程教材 | https://github.com/ccc112a/cpu2os <BR/> https://www.nand2tetris.org/
 
 1-2章：自己寫
-3章：pc
-4章：fill、mult
+3章：pc參考https://gist.github.com/leesharma/d5987848b04a5577619ad15af7c358b4，已經理解，剩下自己寫
+4章：fill、mult參考https://github.com/davidsmithmke/nand2tetris-project4，已經理解
 5章：cpu參考https://github.com/havivha/Nand2Tetris/blob/master/05/CPU.hdl和
