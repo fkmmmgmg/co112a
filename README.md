@@ -9,3 +9,7 @@
 學校科系 | [金門大學資訊工程系](https://www.nqu.edu.tw/educsie/index.php)
 課程教材 | https://github.com/ccc112a/cpu2os <BR/> https://www.nand2tetris.org/
 
+1-2章：自己寫
+3章：pc
+4章：fill、mult
+5章：cpu參考https://github.com/havivha/Nand2Tetris/blob/master/05/CPU.hdl和
