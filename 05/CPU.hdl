@@ -59,12 +59,12 @@ CHIP CPU {
         zy=instruction[9], ny=instruction[8], f=instruction[7],
         no=instruction[6], out=ALUout, zr=ZRout, ng=NGout); 
         
-    // Set outputs for writing memory
+    //設定寫入記憶體的輸出
     Or16(a=false, b=Aout, out[0..14]=addressM);
     Or16(a=false, b=ALUout, out=outM);
     And(a=Cinstruction, b=instruction[3], out=writeM);
     
-    // calc PCload & PCinc - whether to load PC with A reg
+    // calc PCload & PCinc - 是否用A reg載入PC
     And(a=ZRout, b=instruction[1], out=jeq);    
     And(a=NGout, b=instruction[2], out=jlt);    
     Or(a=ZRout, b=NGout, out=zeroOrNeg);
